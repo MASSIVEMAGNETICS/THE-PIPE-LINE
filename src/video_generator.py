@@ -99,9 +99,9 @@ class VideoGenerator:
         self.output_dir = Path(output_dir)
         self.config = config or {}
         
-        # Configuration
-        self.fps = self.config.get("fps", 30)
-        self.resolution = self.config.get("resolution", (1920, 1080))
+        # Configuration - prioritize video_script values over config
+        self.fps = video_script.fps if video_script.fps else self.config.get("fps", 30)
+        self.resolution = video_script.resolution if video_script.resolution else self.config.get("resolution", (1920, 1080))
         self.quality = self.config.get("quality", "high")
         
         # State
