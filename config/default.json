@@ -1,0 +1,10 @@
+{
+    "fps": 30,
+    "resolution": [1920, 1080],
+    "quality": "high",
+    "output_dir": "./output",
+    "output_filename": "music_video.mp4",
+    "style": "cinematic",
+    "enable_lip_sync": true,
+    "ai_model": "default"
+}
