@@ -20,16 +20,16 @@ MAX_BACKGROUND_IMAGES = 5
 MAX_ELEMENT_IMAGES = 5
 
 
-def validate_image_path(path: str) -> bool:
+def validate_image_path(path: str | None) -> bool:
     """Validate that a file exists and has a valid image extension.
     
     Args:
-        path: Path to the image file.
+        path: Path to the image file, or None.
         
     Returns:
         True if path exists and has valid image extension.
     """
-    if not path:
+    if path is None or not path:
         return False
     
     valid_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'}

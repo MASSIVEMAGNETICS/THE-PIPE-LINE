@@ -78,6 +78,7 @@ class AIOrchestrator:
     DEFAULT_SCENE_DURATION = 5.0  # seconds
     MIN_SCENES = 4
     MAX_SCENES = 20
+    PROMPT_TRUNCATE_LENGTH = 50  # Characters to show in scene description
     
     def __init__(self, target_duration: float = 60.0) -> None:
         """Initialize the orchestrator.
@@ -223,7 +224,7 @@ class AIOrchestrator:
             
             scene = SceneDescription(
                 scene_id=i + 1,
-                description=f"{scene_type} scene for '{pipeline_input.song_prompt[:50]}...'",
+                description=f"{scene_type} scene for '{pipeline_input.song_prompt[:self.PROMPT_TRUNCATE_LENGTH]}...'",
                 duration_seconds=self.DEFAULT_SCENE_DURATION,
                 character_references=scene_chars,
                 background_reference=scene_bg,

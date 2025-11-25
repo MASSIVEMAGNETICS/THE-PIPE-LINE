@@ -9,8 +9,13 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional
 import os
+import tempfile
 
 from .orchestrator import OrchestrationResult, SceneDescription
+
+
+# Default output directory using platform-agnostic temp path
+DEFAULT_GENERATION_DIR = str(Path(tempfile.gettempdir()) / "music_video_pipeline")
 
 
 class RenderStatus(Enum):
@@ -90,7 +95,7 @@ class VideoGenerator:
         """
         self.fps = fps
         self.resolution = resolution
-        self.output_dir = output_dir or "/tmp/music_video_pipeline"
+        self.output_dir = output_dir or DEFAULT_GENERATION_DIR
     
     def generate(self, orchestration_result: OrchestrationResult) -> VideoGenerationResult:
         """Generate video content from orchestration result.

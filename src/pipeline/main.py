@@ -6,6 +6,7 @@ generating music videos from user inputs.
 
 import argparse
 import json
+import tempfile
 from dataclasses import asdict
 from pathlib import Path
 from typing import Optional
@@ -15,6 +16,10 @@ from .input_handler import PipelineInput, create_input_from_dict
 from .orchestrator import AIOrchestrator, OrchestrationResult
 from .video_generator import VideoGenerator, VideoGenerationResult
 from .exporter import VideoExporter, ExportResult
+
+
+# Default output directory using platform-agnostic temp path
+DEFAULT_OUTPUT_DIR = str(Path(tempfile.gettempdir()) / "music_video_output")
 
 
 class MusicVideoPipeline:
@@ -42,7 +47,7 @@ class MusicVideoPipeline:
         self.target_duration = target_duration
         self.fps = fps
         self.resolution = resolution
-        self.output_dir = output_dir or "/tmp/music_video_output"
+        self.output_dir = output_dir or DEFAULT_OUTPUT_DIR
         
         # Initialize pipeline components
         self.orchestrator = AIOrchestrator(target_duration=target_duration)
