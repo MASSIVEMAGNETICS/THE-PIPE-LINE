@@ -230,15 +230,16 @@ def generate_video():
         }
         
         # Initialize job
-        jobs[job_id] = {
-            "id": job_id,
-            "status": "queued",
-            "progress": 0,
-            "message": "Job queued...",
-            "created_at": datetime.now().isoformat(),
-            "input_data": input_data,
-            "settings": settings
-        }
+        with _jobs_lock:
+            jobs[job_id] = {
+                "id": job_id,
+                "status": "queued",
+                "progress": 0,
+                "message": "Job queued...",
+                "created_at": datetime.now().isoformat(),
+                "input_data": input_data,
+                "settings": settings
+            }
         
         # Start background job
         thread = threading.Thread(
