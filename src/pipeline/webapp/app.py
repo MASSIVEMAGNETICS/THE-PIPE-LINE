@@ -41,7 +41,6 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'}
 
 # Thread-safe job storage with lock
 # NOTE: For production scale, use Redis or a database
-import threading
 _jobs_lock = threading.Lock()
 jobs = {}
 
