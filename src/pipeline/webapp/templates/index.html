@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE-PIPE-LINE | AI Music Video Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="background-animation">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-film"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>THE-PIPE-LINE</h1>
+                    <span class="tagline">Next-Gen AI Music Video Generator</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-ghost" id="settingsBtn">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="btn btn-ghost" id="helpBtn">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Left Panel - Input Form -->
+            <section class="panel input-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-magic"></i> Create Your Video</h2>
+                    <span class="badge badge-pro">PRO</span>
+                </div>
+                
+                <form id="videoForm" class="video-form">
+                    <!-- Song Prompt -->
+                    <div class="form-group">
+                        <label for="songPrompt">
+                            <i class="fas fa-music"></i> Song Description
+                            <span class="required">*</span>
+                        </label>
+                        <textarea 
+                            id="songPrompt" 
+                            name="song_prompt" 
+                            placeholder="Describe your song... e.g., 'An upbeat electronic dance track with pulsing synths and energetic drops'"
+                            required
+                        ></textarea>
+                        <div class="input-hint">Be descriptive for better AI understanding</div>
+                    </div>
+
+                    <!-- Lyrics (Optional) -->
+                    <div class="form-group">
+                        <label for="lyrics">
+                            <i class="fas fa-align-left"></i> Lyrics
+                            <span class="optional">(Optional - improves lip sync)</span>
+                        </label>
+                        <textarea 
+                            id="lyrics" 
+                            name="lyrics" 
+                            placeholder="Enter song lyrics for enhanced lip syncing..."
+                            rows="3"
+                        ></textarea>
+                    </div>
+
+                    <!-- Image Uploads -->
+                    <div class="upload-section">
+                        <h3><i class="fas fa-images"></i> Visual References</h3>
+                        
+                        <!-- Character Images -->
+                        <div class="upload-group">
+                            <label>
+                                <i class="fas fa-user"></i> Character Images
+                                <span class="upload-limit">(Up to 5)</span>
+                            </label>
+                            <div class="upload-zone" id="characterUpload" data-type="character">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Drag & drop or click to upload</span>
+                            </div>
+                            <div class="preview-container" id="characterPreview"></div>
+                            <input type="file" id="characterInput" multiple accept="image/*" hidden>
+                        </div>
+
+                        <!-- Additional Character -->
+                        <div class="upload-group">
+                            <label>
+                                <i class="fas fa-user-plus"></i> Additional Character
+                                <span class="upload-limit">(Optional)</span>
+                            </label>
+                            <div class="upload-zone" id="additionalCharUpload" data-type="additional">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Drag & drop or click</span>
+                            </div>
+                            <div class="preview-container" id="additionalCharPreview"></div>
+                            <input type="file" id="additionalCharInput" accept="image/*" hidden>
+                        </div>
+
+                        <!-- Background Images -->
+                        <div class="upload-group">
+                            <label>
+                                <i class="fas fa-mountain"></i> Background Images
+                                <span class="upload-limit">(Up to 5)</span>
+                            </label>
+                            <div class="upload-zone" id="backgroundUpload" data-type="background">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Drag & drop or click to upload</span>
+                            </div>
+                            <div class="preview-container" id="backgroundPreview"></div>
+                            <input type="file" id="backgroundInput" multiple accept="image/*" hidden>
+                        </div>
+
+                        <!-- Element Images -->
+                        <div class="upload-group">
+                            <label>
+                                <i class="fas fa-shapes"></i> Elements & Props
+                                <span class="upload-limit">(Up to 5)</span>
+                            </label>
+                            <div class="upload-zone" id="elementUpload" data-type="element">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Drag & drop or click to upload</span>
+                            </div>
+                            <div class="preview-container" id="elementPreview"></div>
+                            <input type="file" id="elementInput" multiple accept="image/*" hidden>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button type="submit" class="btn btn-primary btn-generate" id="generateBtn">
+                        <i class="fas fa-rocket"></i>
+                        <span>Generate Video</span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Right Panel - Settings & Preview -->
+            <section class="panel settings-panel">
+                <!-- Settings Section -->
+                <div class="settings-section">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-sliders-h"></i> Settings</h2>
+                    </div>
+
+                    <!-- Duration -->
+                    <div class="setting-group">
+                        <label>
+                            <i class="fas fa-clock"></i> Duration
+                            <span class="setting-value" id="durationValue">60s</span>
+                        </label>
+                        <input type="range" id="duration" name="duration" min="10" max="300" value="60">
+                    </div>
+
+                    <!-- FPS -->
+                    <div class="setting-group">
+                        <label>
+                            <i class="fas fa-film"></i> Frame Rate
+                            <span class="setting-value" id="fpsValue">30 FPS</span>
+                        </label>
+                        <input type="range" id="fps" name="fps" min="15" max="60" value="30">
+                    </div>
+
+                    <!-- Resolution -->
+                    <div class="setting-group">
+                        <label><i class="fas fa-expand"></i> Resolution</label>
+                        <select id="resolution" name="resolution">
+                            <option value="640x360">360p (Fast)</option>
+                            <option value="1280x720">720p HD</option>
+                            <option value="1920x1080" selected>1080p Full HD</option>
+                            <option value="3840x2160">4K UHD</option>
+                        </select>
+                    </div>
+
+                    <!-- Compute Mode -->
+                    <div class="setting-group">
+                        <label><i class="fas fa-bolt"></i> Compute Mode</label>
+                        <div class="preset-buttons" id="computeModeButtons">
+                            <button type="button" class="preset-btn" data-value="ultra_low">⚡ Ultra Low</button>
+                            <button type="button" class="preset-btn" data-value="turbo">🚀 Turbo</button>
+                            <button type="button" class="preset-btn active" data-value="balanced">⚖️ Balanced</button>
+                            <button type="button" class="preset-btn" data-value="quality">💎 Quality</button>
+                        </div>
+                        <input type="hidden" id="computeMode" name="compute_mode" value="balanced">
+                    </div>
+
+                    <!-- Model Backend -->
+                    <div class="setting-group">
+                        <label><i class="fas fa-brain"></i> AI Backend</label>
+                        <select id="modelBackend" name="model_backend">
+                            <option value="local_fast" selected>🏠 Local Fast</option>
+                            <option value="local_quality">🏠 Local Quality</option>
+                            <option value="cloud_api">☁️ Cloud API</option>
+                            <option value="hybrid">🔀 Hybrid</option>
+                        </select>
+                    </div>
+
+                    <!-- Render Quality -->
+                    <div class="setting-group">
+                        <label><i class="fas fa-star"></i> Render Quality</label>
+                        <select id="renderQuality" name="render_quality">
+                            <option value="preview">📱 Preview (Fastest)</option>
+                            <option value="draft">📺 Draft</option>
+                            <option value="standard" selected>🖥️ Standard</option>
+                            <option value="high">🎬 High (4K)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Progress Section -->
+                <div class="progress-section" id="progressSection" style="display: none;">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-spinner fa-spin"></i> Generating...</h2>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span id="progressPercent">0%</span>
+                            <span id="progressMessage">Initializing...</span>
+                        </div>
+                    </div>
+
+                    <div class="progress-stages" id="progressStages">
+                        <div class="stage" data-stage="validation">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Validation</span>
+                        </div>
+                        <div class="stage" data-stage="orchestration">
+                            <i class="fas fa-circle"></i>
+                            <span>AI Orchestration</span>
+                        </div>
+                        <div class="stage" data-stage="generation">
+                            <i class="fas fa-circle"></i>
+                            <span>Video Generation</span>
+                        </div>
+                        <div class="stage" data-stage="export">
+                            <i class="fas fa-circle"></i>
+                            <span>Export</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Result Section -->
+                <div class="result-section" id="resultSection" style="display: none;">
+                    <div class="panel-header success">
+                        <h2><i class="fas fa-check-circle"></i> Video Ready!</h2>
+                    </div>
+                    
+                    <div class="video-preview">
+                        <div class="preview-placeholder">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Your video is ready</span>
+                        </div>
+                    </div>
+
+                    <div class="result-actions">
+                        <button class="btn btn-primary" id="downloadBtn">
+                            <i class="fas fa-download"></i> Download Video
+                        </button>
+                        <button class="btn btn-secondary" id="newVideoBtn">
+                            <i class="fas fa-plus"></i> Create New
+                        </button>
+                    </div>
+
+                    <div class="result-details" id="resultDetails">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-left">
+                <span>© 2024 THE-PIPE-LINE by MASSIVEMAGNETICS</span>
+            </div>
+            <div class="footer-right">
+                <span class="version">v1.0.0</span>
+                <span class="separator">|</span>
+                <span>🚀 Next-Gen AI Powered</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-question-circle"></i> Help & Guide</h2>
+                <button class="modal-close" id="closeHelp">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h3>🎬 How to Create a Music Video</h3>
+                    <ol>
+                        <li>Enter a detailed description of your song</li>
+                        <li>Upload character, background, and element images</li>
+                        <li>Optionally add lyrics for lip sync</li>
+                        <li>Adjust settings to your preference</li>
+                        <li>Click "Generate Video" and wait for magic!</li>
+                    </ol>
+                </div>
+                <div class="help-section">
+                    <h3>🎮 CHEAT CODES</h3>
+                    <ul>
+                        <li><strong>Ultra Low Mode:</strong> Maximum caching, fastest generation</li>
+                        <li><strong>Turbo Mode:</strong> Parallel processing for speed</li>
+                        <li><strong>Preview Quality:</strong> Quick previews at 360p</li>
+                    </ul>
+                </div>
+                <div class="help-section">
+                    <h3>💡 Tips</h3>
+                    <ul>
+                        <li>Use high-quality reference images for better results</li>
+                        <li>Be descriptive in your song prompt</li>
+                        <li>Add lyrics to improve character lip syncing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

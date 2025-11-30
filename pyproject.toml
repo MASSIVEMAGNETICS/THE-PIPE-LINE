@@ -1,3 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "the-pipe-line"
+version = "1.0.0"
+description = "🚀 Next-Gen AI Music Video Generation Pipeline - Production-Ready Desktop & Web Application"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "MASSIVEMAGNETICS"}
+]
+keywords = [
+    "ai", "music-video", "video-generation", "multimodal", 
+    "machine-learning", "creative-ai", "desktop-app", "web-app"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Environment :: Win32 (MS Windows)",
+    "Framework :: Flask",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Programming Language :: Python :: 3",
 [project]
 name = "the-pipe-line"
 version = "1.0.0"
@@ -19,6 +48,16 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "Pillow>=10.0.0",
+    "numpy>=1.24.0",
+    "flask>=3.0.0",
+    "werkzeug>=3.0.0",
+]
+
 ]
 
 dependencies = []
@@ -27,6 +66,45 @@ dependencies = []
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+]
+desktop = [
+    "pywebview>=4.0.0",
+]
+all = [
+    "the-pipe-line[dev,desktop]",
+]
+
+[project.scripts]
+# CLI commands
+the-pipe-line = "pipeline.main:main"
+music-video-pipeline = "pipeline.main:main"
+# Desktop application
+the-pipe-line-desktop = "pipeline.desktop:main"
+# Web server
+the-pipe-line-server = "pipeline.webapp.app:run_server"
+
+[project.gui-scripts]
+the-pipe-line-gui = "pipeline.desktop:main"
+
+[project.urls]
+Homepage = "https://github.com/MASSIVEMAGNETICS/THE-PIPE-LINE"
+Documentation = "https://github.com/MASSIVEMAGNETICS/THE-PIPE-LINE#readme"
+Repository = "https://github.com/MASSIVEMAGNETICS/THE-PIPE-LINE"
+Issues = "https://github.com/MASSIVEMAGNETICS/THE-PIPE-LINE/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"pipeline.webapp" = [
+    "templates/*.html",
+    "static/css/*.css",
+    "static/js/*.js",
+    "static/img/*",
+]
 ]
 
 [project.scripts]
@@ -39,5 +117,14 @@ build-backend = "setuptools.build_meta"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+
+[tool.black]
+line-length = 100
+target-version = ['py39', 'py310', 'py311', 'py312']
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
 python_functions = ["test_*"]
 addopts = "-v"

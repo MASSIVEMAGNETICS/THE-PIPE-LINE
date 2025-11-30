@@ -20,6 +20,9 @@ parts/
 sdist/
 var/
 wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
@@ -143,3 +146,8 @@ temp_*/
 # OS
 .DS_Store
 Thumbs.db
+
+# Project-specific
+/output/
+*.mp4
+/tmp/
